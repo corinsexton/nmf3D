@@ -1,0 +1,77 @@
+scoring matrix chr1
+number of candidates 2778274
+scoring matrix chr2
+number of candidates 2770033
+scoring matrix chr3
+number of candidates 2240530
+scoring matrix chr4
+number of candidates 1888683
+scoring matrix chr5
+number of candidates 1979648
+scoring matrix chr6
+number of candidates 1900403
+scoring matrix chr7
+number of candidates 1710464
+scoring matrix chr8
+number of candidates 1668738
+scoring matrix chr9
+number of candidates 1348574
+scoring matrix chr10
+number of candidates 1624311
+scoring matrix chr11
+number of candidates 1623409
+scoring matrix chr12
+number of candidates 1543129
+scoring matrix chr13
+number of candidates 1004481
+scoring matrix chr14
+number of candidates 1036768
+scoring matrix chr15
+number of candidates 991221
+scoring matrix chr16
+number of candidates 985425
+scoring matrix chr17
+number of candidates 1021041
+scoring matrix chr18
+number of candidates 860904
+scoring matrix chr19
+number of candidates 663957
+scoring matrix chr20
+number of candidates 848782
+scoring matrix chr21
+number of candidates 379969
+scoring matrix chr22
+number of candidates 500661
+scoring matrix chrX
+number of candidates 808118
+scoring matrix chrY
+number of candidates 51860
+
+real	120m9.324s
+user	119m25.956s
+sys	0m28.159s
+POOL
+Traceback (most recent call last):
+  File "/home/csexton/.conda/envs/3dgenome/bin/peakachu", line 4, in <module>
+    __import__('pkg_resources').run_script('peakachu==1.2.0.post1', 'peakachu')
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/pkg_resources/__init__.py", line 651, in run_script
+    self.require(requires)[0].run_script(script_name, ns)
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/pkg_resources/__init__.py", line 1448, in run_script
+    exec(code, namespace, namespace)
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/peakachu-1.2.0.post1-py3.6.egg/EGG-INFO/scripts/peakachu", line 84, in <module>
+    run()
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/peakachu-1.2.0.post1-py3.6.egg/EGG-INFO/scripts/peakachu", line 80, in run
+    args.func(args)
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/peakachu-1.2.0.post1-py3.6.egg/peakachu/call_loops.py", line 14, in main
+    clusters, score_pool = peakacluster.parse_peakachu(args.infile, args.threshold, res)
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/peakachu-1.2.0.post1-py3.6.egg/peakachu/peakacluster.py", line 27, in parse_peakachu
+    results[c] = second_run(intermediate)
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/peakachu-1.2.0.post1-py3.6.egg/peakachu/peakacluster.py", line 35, in second_run
+    _, labels = dbscan(pos, eps=3, min_samples=2)
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/sklearn/cluster/dbscan_.py", line 129, in dbscan
+    X = check_array(X, accept_sparse='csr')
+  File "/home/csexton/.conda/envs/3dgenome/lib/python3.6/site-packages/sklearn/utils/validation.py", line 552, in check_array
+    "if it contains a single sample.".format(array))
+ValueError: Expected 2D array, got 1D array instead:
+array=[].
+Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample.

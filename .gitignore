@@ -1,0 +1,14 @@
+raw_data/*
+util/*
+./get_contact_labels/chromHMM_coordonly.bed
+./get_contact_labels/chromHMM_endoderm.bed
+./get_contact_labels/x
+./get_contact_labels/chromHMM_h1.bed
+./get_contact_labels/chromHMM_total.bed
+./call_loops/4DNFIJLK5WML_scores_5kb.loops
+./call_loops/4DNFI9E222YJ_scores_5kb.loops
+./chromHMM_epimap_calls/BSS00478_18_CALLS_segments.bed
+./util/high-confidence.200million.5kb.pkl
+./util/high-confidence.150million.5kb.pkl
+./raw_data/4DNFI9E222YJ.mcool
+./raw_data/4DNFIJLK5WML.mcool

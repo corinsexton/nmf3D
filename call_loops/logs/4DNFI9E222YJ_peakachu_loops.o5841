@@ -1,0 +1,53 @@
+scoring matrix chr1
+number of candidates 3337707
+scoring matrix chr2
+number of candidates 3266030
+scoring matrix chr3
+number of candidates 2666294
+scoring matrix chr4
+number of candidates 2222846
+scoring matrix chr5
+number of candidates 2335174
+scoring matrix chr6
+number of candidates 2280317
+scoring matrix chr7
+number of candidates 2078871
+scoring matrix chr8
+number of candidates 1958667
+scoring matrix chr9
+number of candidates 1633335
+scoring matrix chr10
+number of candidates 1943450
+scoring matrix chr11
+number of candidates 1946064
+scoring matrix chr12
+number of candidates 1869883
+scoring matrix chr13
+number of candidates 1207344
+scoring matrix chr14
+number of candidates 1250012
+scoring matrix chr15
+number of candidates 1219927
+scoring matrix chr16
+number of candidates 1226762
+scoring matrix chr17
+number of candidates 1281470
+scoring matrix chr18
+number of candidates 1033543
+scoring matrix chr19
+number of candidates 825795
+scoring matrix chr20
+number of candidates 1031146
+scoring matrix chr21
+number of candidates 463891
+scoring matrix chr22
+number of candidates 632240
+scoring matrix chrX
+number of candidates 963295
+scoring matrix chrY
+number of candidates 60936
+
+real	138m48.275s
+user	137m52.845s
+sys	0m37.104s
+POOL
