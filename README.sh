@@ -59,5 +59,8 @@ wget https://personal.broadinstitute.org/cboix/epimap/ChromHMM/observed_aux_18_h
 
 `RcppML_nmf/run_nmf.R`
 
+## STEP 7: Visualizaions
 
+`visualizations/sankey`
+heatmaps = `Rcpp_ML/run_nmf.R`
 

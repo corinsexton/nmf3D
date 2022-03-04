@@ -1,4 +1,4 @@
-setwd("~/Documents/UNLV/Year4/nmf3D/sankey")
+setwd("~/Documents/UNLV/Year4/nmf3D/visualizations/sankey")
 
 library(tidyverse)
 library(UpSetR)
