@@ -31,6 +31,10 @@ model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-100)
 colnames(model$h) <- colnames(matCSC)
 rownames(model$h) <- 1:num_labels
 
+# # ONLY LOCALLY, NON DEV VERSION OF RcppML
+colnames(model$w) <- 1:num_labels
+rownames(model$w) <- rownames(matCSC)
+
 png(paste0("h_",num_labels,".png"),width = 1300, height = 1000, res = 200)
 pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
          cluster_cols = T, fontsize = 14,
@@ -40,9 +44,7 @@ pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
 # breaks = seq(-1, 1, length.out = 100)
 dev.off()
 
-# # ONLY LOCALLY, NON DEV VERSION OF RcppML
-colnames(model$w) <- 1:num_labels
-rownames(model$w) <- rownames(matCSC)
+
 
 
 z <- as.data.frame(ifelse(grepl("endo",rownames(matCSC)),"endo","h1"))

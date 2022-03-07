@@ -29,8 +29,8 @@ network$target <- network$target - 1 + 6
 
 
 nodes = data.frame("name" = 
-                     c(paste0(1:6,"_h1"),
-                       paste0(1:6,"_endo")),
+                     c(paste0(1:6,""),
+                       paste0(1:6,"")),
                    "node" = 0:2,stringsAsFactors = F
 )
 
