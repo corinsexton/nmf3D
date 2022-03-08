@@ -29,8 +29,8 @@ network$target <- network$target - 1 + 6
 
 
 nodes = data.frame("name" = 
-                     c(paste0(1:6,""),
-                       paste0(1:6,"")),
+                     c("Quies",paste0(2:6,""),
+                       "Quies",paste0(2:6,"")),
                    "node" = 0:2,stringsAsFactors = F
 )
 
@@ -54,9 +54,9 @@ sn$sizingPolicy$browser$fill <- F
 sn$sizingPolicy$browser$defaultWidth <- 400
 
 # you save it as an html
-saveNetwork(sn, "6lab_nmf.html")
+saveNetwork(sn, "~/Downloads/6lab_nmf.html")
 
 library(webshot)
 # you convert it as png
-webshot("6lab_nmf.html","6lab_nmf.png", vwidth =400, vheight = 600)
+webshot("~/Downloads/6lab_nmf.html","6lab_nmf.png", vwidth =400, vheight = 600)
 
