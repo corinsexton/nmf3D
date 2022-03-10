@@ -12,3 +12,4 @@ util/*
 ./util/high-confidence.150million.5kb.pkl
 ./raw_data/4DNFI9E222YJ.mcool
 ./raw_data/4DNFIJLK5WML.mcool
+./choose_top_results/util/*
