@@ -13,3 +13,6 @@ util/*
 ./raw_data/4DNFI9E222YJ.mcool
 ./raw_data/4DNFIJLK5WML.mcool
 ./choose_top_results/util/*
+./call_loops/4DNFI9E222YJ_scores_5kb.loops
+./call_loops/4DNFIJLK5WML_scores_5kb.loops
+./get_contact_labels/chromHMM_total.bed
