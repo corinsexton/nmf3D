@@ -32,6 +32,9 @@ bedtools intersect -a ../RcppML_nmf/h1_labelled.bed -b ../RcppML_nmf/endo_labell
 bedtools intersect -a ../chromHMM_epimap_calls/H1.bed -b ../chromHMM_epimap_calls/endoderm.bed -wa -wb -f .99 -F .99 | \
 	awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4"\t"$13}' - | sed 's/\//_/g' > chromHMM_network.bed
 
+# contacts
+bedtools intersect -a ../chromHMM_epimap_calls/H1.bed -b ../chromHMM_epimap_calls/endoderm.bed -wa -wb -f .99 -F .99 | \
+	awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4"\t"$13}' - | sed 's/\//_/g' > chromHMM_network.bed
 
 
 ### TOTAL INTERSECT

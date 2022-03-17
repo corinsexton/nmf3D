@@ -39,7 +39,7 @@ png(paste0("h_",num_labels,".png"),width = 1300, height = 1000, res = 200)
 pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
          cluster_cols = T, fontsize = 14,
          main = paste0("H matrix k=",num_labels),
-         breaks = seq(-1, 1, length.out = 100))
+         breaks = seq(-2, 2, length.out = 100))
 # main = "Segmentation of H1 and naive hESCs",
 # breaks = seq(-1, 1, length.out = 100)
 dev.off()
@@ -74,6 +74,9 @@ endo_labelled <- subset(all_labelled, type == 'endo')[,2:5]
 
 write_tsv(h1_labelled, "h1_labelled.bed", col_names = F)
 write_tsv(endo_labelled, "endo_labelled.bed", col_names = F)
+
+
+
 
 
 

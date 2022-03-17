@@ -38,6 +38,9 @@ bedtools intersect -a loops_coord_only1.bedpe -b chromHMM_coordonly.bed -wa -wb 
 bedtools sort -i intersect_loops_states1.bed | bedtools merge -i - -c 4,5,6,11 -o collapse > connections.tsv
 bedtools sort -i intersect_loops_states2.bed | bedtools merge -i - -c 4,5,6,11 -o collapse >> connections.tsv
 
+#grep '_endo' connections.tsv > connections_endo.tsv
+#grep '_h1' connections.tsv > connections_h1.tsv
+
 
 ### STEP 2: Create 2 bedfiles (contact 1 -> 2 and contact 2 -> 1)
 cut -f 4,5,6,7,11 intersect_loops_states2.bed > contact2_states.bed
