@@ -18,3 +18,4 @@ util/*
 ./get_contact_labels/chromHMM_total.bed
 ./choose_top_results/.Rhistory
 ./choose_top_results/.RData
+
