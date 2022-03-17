@@ -28,12 +28,15 @@ cut -f4 chromHMM_coordonly.bed | sort | uniq > class_meta.txt
 
 
 ### STEP 1: Intersect loops (micro-c) with chromHMM labels
-bedtools intersect -a $loops -b chromHMM_coordonly.bed -wa -wb > intersect_loops_states2.bed
+bedtools intersect -a $loops -b chromHMM_coordonly.bed -wa -wb -F .3 > intersect_loops_states2.bed
 awk '{print $4"\t"$5"\t"$6"\t"$1"\t"$2"\t"$3"\t"$7}' $loops > loops_coord_only1.bedpe 
-bedtools intersect -a loops_coord_only1.bedpe -b chromHMM_coordonly.bed -wa -wb > intersect_loops_states1.bed
+bedtools intersect -a loops_coord_only1.bedpe -b chromHMM_coordonly.bed -wa -wb -F .3 > intersect_loops_states1.bed
 
-bedtools sort -i intersect_loops_states1.bed | bedtools merge -i - -o collapse,count,count_distinct -c 11 -d -5000 > loops1_states.bed
-bedtools sort -i intersect_loops_states2.bed | bedtools merge -i - -o collapse,count,count_distinct -c 11 -d -5000 > loops2_states.bed
+#bedtools sort -i intersect_loops_states1.bed | bedtools merge -i - -o collapse,count,count_distinct -c 11 -d -5000 > loops1_states.bed
+#bedtools sort -i intersect_loops_states2.bed | bedtools merge -i - -o collapse,count,count_distinct -c 11 -d -5000 > loops2_states.bed
+
+bedtools sort -i intersect_loops_states1.bed | bedtools merge -i - -c 4,5,6,11 -o collapse > connections.tsv
+bedtools sort -i intersect_loops_states2.bed | bedtools merge -i - -c 4,5,6,11 -o collapse >> connections.tsv
 
 
 ### STEP 2: Create 2 bedfiles (contact 1 -> 2 and contact 2 -> 1)
