@@ -14,7 +14,7 @@ library(RcppML)
 library(tidyverse)
 library(pheatmap)
 
-con_mat <- read_tsv("matrix_connections.tsv")
+con_mat <- read_tsv("../create_matrix/matrix_connections.tsv")
 
 x <- as.matrix(con_mat[,-1])
 rownames(x) <- con_mat$region
@@ -23,7 +23,7 @@ matCSC <- as(x, "dgCMatrix")
 num_labels = 6
 num_runs = 100
 
-model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-100)
+model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-20)
 
 # saveRDS(model,paste0("model_",num_labels,".rds"))
 
@@ -66,7 +66,10 @@ dev.off()
 
 con_mat <- con_mat %>% separate(region,c("chr","type","pos1","pos2"),sep = '[:_-]')
 
-all_labelled <- data.frame(type = con_mat$type, chr = con_mat$chr, pos1 = con_mat$pos1, pos2 = con_mat$pos2,
+all_labelled <- data.frame(type = con_mat$type,
+                           chr = con_mat$chr,
+                           pos1 = con_mat$pos1,
+                           pos2 = con_mat$pos2,
                            label = colnames(model$w)[apply(model$w,1,which.max)])
 
 h1_labelled <- subset(all_labelled, type == 'h1')[,2:5]

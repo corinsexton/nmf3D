@@ -13,7 +13,7 @@ network$value <- as.numeric(network$value)
 
 # MUST BE ZERO-INDEXED
 network$source <- network$source - 1
-network$target <- network$target - 1 + 6
+network$target <- network$target - 1 + 7
 
 # network$target <- network$target + 10
 
@@ -29,10 +29,21 @@ network$target <- network$target - 1 + 6
 
 
 nodes = data.frame("name" = 
-                     c("Quies",paste0(2:6,""),
-                       "Quies",paste0(2:6,"")),
-                   "node" = 0:2,stringsAsFactors = F
-)
+                     c("NONE", "1cont_EnhWk",
+                       "2cont_misc",
+                       "3cont_Tx",
+                       "4cont_Tss",
+                       "5cont_Enh",
+                       "6cont_Quies",
+                       
+                       "NONE", "1cont_EnhWk",
+                       "2cont_misc",
+                       "3cont_Tx",
+                       "4cont_Tss",
+                       "5cont_Enh",
+                       "6cont_Quies"
+                       
+                      ))
 
 
 names(network) = c("source", "target", "value")
@@ -58,5 +69,8 @@ saveNetwork(sn, "~/Downloads/6lab_nmf.html")
 
 library(webshot)
 # you convert it as png
-webshot("~/Downloads/6lab_nmf.html","6lab_nmf.png", vwidth =400, vheight = 600)
+setwd("~")
+webshot("Downloads/6lab_nmf.html",
+        "Documents/UNLV/Year4/nmf3D/visualizations/sankey/6lab_nmf.png", vwidth =400, vheight = 600)
+setwd("~/Documents/UNLV/Year4/nmf3D/visualizations/sankey")
 

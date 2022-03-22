@@ -13,7 +13,15 @@ z <- table(total_int$nmf3D_H1,total_int$nmf3D_endo,total_int$chromHMM_H1,total_i
 
 total_int <- total_int %>% mutate(nmf3D_change = paste0(nmf3D_H1,'_',nmf3D_endo)) %>% mutate(chromHMM_change = paste0(chromHMM_H1,'_',chromHMM_endo))
 
-interesting_cells <- (total_int$nmf3D_H1 == 1 | total_int$nmf3D_endo == 1) & !(total_int$nmf3D_endo == 1 & total_int$nmf3D_H1 == 1)
+interesting_cells <- (total_int$nmf3D_H1 == 1 | total_int$nmf3D_endo == 1) & 
+  !(total_int$nmf3D_endo == 1 & total_int$nmf3D_H1 == 1)
+
+interesting_cells <- (grepl("Tss",total_int$chromHMM_H1,"Tss") | grepl("Tss",total_int$chromHMM_endo)) &
+  !(grepl("Tss",total_int$chromHMM_H1) & grepl("Tss",total_int$chromHMM_endo))
+
+interesting_cells <- (total_int$nmf3D_H1 == 5 | total_int$nmf3D_endo == 5)
+
+
 ss <- total_int[interesting_cells,]
 z <- table(ss$nmf3D_change, ss$chromHMM_change)
 zz <- data.frame(z)
@@ -75,13 +83,15 @@ colnames(total_matches) <- c("H1_chr", "H1_pos1","H1_pos2","H1_contact_chr", "H1
 library(GenomicRanges)
 library(AnnotationHub)
 
-### FIX THIS PART! -- need to use regions that are in contact here, not base region.
-h1_reg <- GRanges(total_matches$H1_contact_chr, IRanges(as.numeric(total_matches$H1_contact_pos1),
-                                                        as.numeric(total_matches$H1_contact_pos2)))
+# h1_reg <- GRanges(total_matches$H1_contact_chr, IRanges(as.numeric(total_matches$H1_contact_pos1),
+#                                                         as.numeric(total_matches$H1_contact_pos2)))
+h1_reg <- GRanges(total_matches$H1_chr, IRanges(as.numeric(total_matches$H1_pos1),
+                                                        as.numeric(total_matches$H1_pos2)))
 
 ah <- AnnotationHub()
-#query(ah, c("Gencode", "gff", "human","GRCh38","basic"))
+# query(ah, c("Gencode", "gff", "human","GRCh38","basic"))
 gc <- ah[["AH75120"]]
+# gc <- ah[["AH49556"]]
 
 overlaps <- findOverlaps(h1_reg, gc)
 
@@ -89,7 +99,9 @@ genes <- extractList(gc$gene_name, as(overlaps, "List"))
 H1_genes <- unstrsplit(unique(genes), ";") # Needed in case more than one gene overlaps.
 annot_regions <- cbind.data.frame(total_matches, H1_genes) %>% separate_rows(H1_genes, sep = ";")
 
-endo_reg <- GRanges(annot_regions$endo_contact_chr, IRanges(as.numeric(annot_regions$endo_contact_pos1),as.numeric(annot_regions$endo_contact_pos2)))
+# endo_reg <- GRanges(annot_regions$endo_contact_chr, IRanges(as.numeric(annot_regions$endo_contact_pos1),as.numeric(annot_regions$endo_contact_pos2)))
+
+endo_reg <- GRanges(annot_regions$endo_chr, IRanges(as.numeric(annot_regions$endo_pos1),as.numeric(annot_regions$endo_pos2)))
 
 overlaps <- findOverlaps(endo_reg, gc)
 
