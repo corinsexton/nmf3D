@@ -39,14 +39,18 @@ endo_contacts <- sep_contact_bed[grep("_endo", sep_contact_bed$chr),]
 h1_contacts <- sep_contact_bed[grep("_h1", sep_contact_bed$chr),]
 
 
+h1_contacts$contact_chr <- gsub("_.*",'',h1_contacts$contact_chr)
+endo_contacts$contact_chr <- gsub("_.*",'',endo_contacts$contact_chr)
+
 h1_contacts$chr <- gsub("_.*",'',h1_contacts$chr)
 endo_contacts$chr <- gsub("_.*",'',endo_contacts$chr)
 
-
 # FIND OVERLAPS IN SIGNIFICANT nmf3D LABELLED REGIONS
+library(GenomicRanges)
 
 nmf3D_regions <- GRanges(ss$chr, IRanges(ss$pos1,ss$pos2))
-endo_regions <- GRanges(endo_contacts[,1], IRanges(as.numeric(endo_contacts[,2]),as.numeric(endo_contacts[,3])))
+endo_regions <- GRanges(endo_contacts$chr, IRanges(as.numeric(endo_contacts$pos1),
+                                                   as.numeric(endo_contacts$pos2)))
 
 
 x <- findOverlaps(nmf3D_regions,endo_regions)
@@ -72,7 +76,8 @@ library(GenomicRanges)
 library(AnnotationHub)
 
 ### FIX THIS PART! -- need to use regions that are in contact here, not base region.
-h1_reg <- GRanges(total_matches$H1_contact_chr, IRanges(as.numeric(total_matches$H1_contact_pos1),as.numeric(total_matches$H1_contact_pos2)))
+h1_reg <- GRanges(total_matches$H1_contact_chr, IRanges(as.numeric(total_matches$H1_contact_pos1),
+                                                        as.numeric(total_matches$H1_contact_pos2)))
 
 ah <- AnnotationHub()
 #query(ah, c("Gencode", "gff", "human","GRCh38","basic"))
