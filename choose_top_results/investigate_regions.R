@@ -72,10 +72,13 @@ x <- findOverlaps(endo_matched_regions,h1_regions)
 
 total_matches <- cbind.data.frame(h1_contacts[attr(x,'to'),],endo_matches[attr(x,'from'),])
 
-colnames(total_matches) <- c("H1_chr", "H1_pos1","H1_pos2","H1_contact_chr", "H1_contact_pos1", "H1_contact_pos2","H1_contact_labels",
-                             "endo_chr", "endo_pos1","endo_pos2","endo_contact_chr", "endo_contact_pos1", "endo_contact_pos2","endo_contact_labels",
+colnames(total_matches) <- c("H1_chr", "H1_pos1","H1_pos2","H1_contact_chr",
+                             "H1_contact_pos1", "H1_contact_pos2","H1_contact_labels",
+                             "endo_chr", "endo_pos1","endo_pos2","endo_contact_chr",
+                             "endo_contact_pos1", "endo_contact_pos2","endo_contact_labels",
                              "nmf3D_chr", "nmf3D_pos1", "mnf3D_pos2","nmf3D_H1_lab", "nmf3D_endo_lab", 
-                             "chromHMM_chr", "chromHMM_pos1", "chromHMM_pos2", "chromHMM_H1_lab", "chromHMM_endo_lab",
+                             "chromHMM_chr", "chromHMM_pos1", "chromHMM_pos2",
+                             "chromHMM_H1_lab", "chromHMM_endo_lab",
                              "nmf3D_change", "chromHMM_change")
 
 ## INCLUDE GENE EXPRESSION
