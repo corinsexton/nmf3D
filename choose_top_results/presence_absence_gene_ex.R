@@ -77,4 +77,4 @@ changes <- merged_h1 %>% select(mean_H1, mean_DEC)
 t.test(changes$mean_DEC,changes$mean_H1, paired = T,alternative = 'g')
 t.test(normalized_counts$mean_DEC,normalized_counts$mean_H1, paired = T, alternative = 'g')
 
-
+#  differences of endo vs diff of H1
