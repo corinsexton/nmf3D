@@ -13,40 +13,7 @@ colnames(H1_present) <- c("chr", "pos1", "pos2", "label")
 colnames(endo_present) <- c("chr", "pos1", "pos2", "label")
 
 
-enh_contacting_regions_H1 <- H1_present[H1_present$label == '3',]
-# enh_contacting_regions_H1 <- endo_present[endo_present$label == '5',]
-
-
-
-## INCLUDE GENE EXPRESSION
-
-library(GenomicRanges)
-library(AnnotationHub)
-
-ah <- AnnotationHub()
-# query(ah, c("Gencode", "gff", "human","GRCh38","basic"))
-gc <- ah[["AH75120"]]
-# gc <- ah[["AH49556"]]
-
-h1_reg <- GRanges(enh_contacting_regions_H1$chr, 
-                  IRanges(as.numeric(enh_contacting_regions_H1$pos1), 
-                          as.numeric(enh_contacting_regions_H1$pos2)))
-
-overlaps <- findOverlaps(h1_reg, gc)
-
-genes <- extractList(gc$gene_name, as(overlaps, "List"))
-H1_genes <- unstrsplit(unique(genes), ";") # Needed in case more than one gene overlaps.
-annot_regions <- cbind.data.frame(enh_contacting_regions_H1, H1_genes) %>%
-  separate_rows(H1_genes, sep = ";")
-
-# endo_reg <- GRanges(annot_regions$endo_chr, IRanges(as.numeric(annot_regions$endo_pos1),as.numeric(annot_regions$endo_pos2)))
-# 
-# overlaps <- findOverlaps(endo_reg, gc)
-# 
-# genes <- extractList(gc$gene_name, as(overlaps, "List"))
-# endo_genes <- unstrsplit(unique(genes), ";") # Needed in case more than one gene overlaps.
-# annot_regions <- cbind.data.frame(annot_regions, endo_genes) %>% separate_rows(endo_genes, sep = ";")
-
+# RAW COUNT NORMALIZATION
 exp_data_raw <- read_csv("../expression/GSE75748_bulk_cell_type_ec.csv")
 exp_data <- round(exp_data_raw[,c(2,3,4,5,9,10)])
 
@@ -66,15 +33,88 @@ normalized_counts <- normalized_counts %>% rowwise() %>%
 
 
 
+## INCLUDE GENE OVERLAPS
 
-merged_h1 <- merge(annot_regions,normalized_counts,by.x = "H1_genes", by.y = "gene",all.x = T)
-# merged_endo <- merge(annot_regions,normalized_counts,by.x = "endo_genes", by.y = "gene")
+library(GenomicRanges)
+library(AnnotationHub)
 
-changes <- merged_h1 %>% select(mean_H1, mean_DEC)
+# ah <- AnnotationHub()
+# gc_db <- ah[["AH75120"]]
 
-# z <- annot_regions[annot_regions$genes != '',]
+get_overlaps <- function(df, gene_exp) {
+  
+  if (!exists("gc_db")) {
+    
+    ah <- AnnotationHub()
+    # query(ah, c("Gencode", "gff", "human","GRCh38","basic"))
+    # gc <- ah[["AH75120"]]
+    # gc <- ah[["AH49556"]]
+    
+    gc_db <<- ah[["AH75120"]]
+  }
+  
+  reg <- GRanges(df$chr, 
+                    IRanges(as.numeric(df$pos1), 
+                            as.numeric(df$pos2)))
+  
+  overlaps <- findOverlaps(reg, gc_db)
+  
+  genes <- extractList(gc_db$gene_name, as(overlaps, "List"))
+  genes <- unstrsplit(unique(genes), ";") # Needed in case more than one gene overlaps.
+  annot_regions <- cbind.data.frame(df, genes) %>%
+    separate_rows(genes, sep = ";") %>% subset(genes != '')
+  
+  merged <- merge(annot_regions,gene_exp,by.x = "genes", by.y = "gene",all.x = T)
+  
+  diffs <- merged %>% select(mean_H1, mean_DEC) %>%
+    mutate(diff =  mean_H1 - mean_DEC) %>% subset(!is.na(mean_H1))
+  
 
-t.test(changes$mean_DEC,changes$mean_H1, paired = T,alternative = 'g')
+  diffs
+}
+ 
+
+
+enh_contacting_regions_H1 <- H1_present[grepl("[12345]",H1_present$label),]
+enh_contacting_regions_endo <- endo_present[grepl("[12345]",endo_present$label),]
+
+
+
+diffs_H1 <- get_overlaps(enh_contacting_regions_H1, normalized_counts)
+diffs_endo <- get_overlaps(enh_contacting_regions_endo,normalized_counts)
+
+t.test(diffs_endo$diff, diffs_H1$diff, paired = F)
+
+
+
+z <- cbind.data.frame(cell = c(rep('H1',nrow(diffs_H1)),rep('endo',nrow(diffs_endo))),
+                      diffs = c(diffs_H1$diff,diffs_endo$diff))
+
+ggplot(z, aes(diffs, fill = cell)) +
+  geom_histogram(binwidth = 50) +
+  xlim(c(-2000,2000)) + ylim(0,100)
+
+
+
+t.test(diffs_endo$mean_DEC,diffs_endo$mean_H1, paired = T,alternative = 'g')
+t.test(diffs_h1$mean_DEC,diffs_h1$mean_H1, paired = T,alternative = 'g')
 t.test(normalized_counts$mean_DEC,normalized_counts$mean_H1, paired = T, alternative = 'g')
 
-#  differences of endo vs diff of H1
+
+
+
+# 
+# 
+# z <- cbind.data.frame(cell = c(rep('H1',nrow(diffs_h1)),rep('endo',nrow(diffs_endo))),
+#                       diffs = c(diffs_h1$diff_h1,diffs_endo$diff_endo))
+# 
+# ggplot(z, aes(diffs, fill = cell)) +
+#   geom_histogram(binwidth = 50) +
+#   xlim(c(-2000,2000))
+# 
+# 
+# t.test(diffs_h1$diff_h1,diffs_endo$diff_endo, paired = F)
+# 
+# # z <- annot_regions[annot_regions$genes != '',]
+
+
