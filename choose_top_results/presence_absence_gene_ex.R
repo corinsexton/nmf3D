@@ -67,7 +67,7 @@ get_overlaps <- function(df, gene_exp) {
   merged <- merge(annot_regions,gene_exp,by.x = "genes", by.y = "gene",all.x = T)
   
   diffs <- merged %>% select(mean_H1, mean_DEC) %>%
-    mutate(diff =  mean_H1 - mean_DEC) %>% subset(!is.na(mean_H1))
+    mutate(diff =  mean_H1 - mean_DEC) %>% subset(!is.na(mean_H1)) %>% unique()
   
 
   diffs
@@ -75,24 +75,48 @@ get_overlaps <- function(df, gene_exp) {
  
 
 
-enh_contacting_regions_H1 <- H1_present[grepl("[12345]",H1_present$label),]
-enh_contacting_regions_endo <- endo_present[grepl("[12345]",endo_present$label),]
+enh_contacting_regions_H1 <- H1_present[grepl("[5]",H1_present$label),]
 
+enh_noncontacting_regions_H1 <- H1_present[grepl("[5]",H1_present$label),]
+
+enh_contacting_regions_endo <- endo_present[grepl("[123456]",endo_present$label),]
 
 
 diffs_H1 <- get_overlaps(enh_contacting_regions_H1, normalized_counts)
+diffs_non_H1 <- get_overlaps(enh_contacting_regions_H1, normalized_counts)
+
 diffs_endo <- get_overlaps(enh_contacting_regions_endo,normalized_counts)
 
-t.test(diffs_endo$diff, diffs_H1$diff, paired = F)
+
+# h1 non labelled vs h1 label 5 expression
+t.test(diffs_endo$mean_H1, diffs_H1$mean_H1, paired = F, alternative = 'l')
+wilcox.test(diffs_endo$mean_H1, diffs_H1$mean_H1, paired = F,alternative = 'l')
 
 
+# #  DEC to H1 expression paired ( DEC IS ALWAYS BIGGER )
+# 
+# t.test(diffs_endo$mean_H1, diffs_endo$mean_DEC, paired = T, alternative = 'l')
+# wilcox.test(diffs_endo$mean_H1, diffs_endo$mean_DEC, paired = T, alternative = 'l')
+# 
+# t.test(diffs_H1$mean_H1, diffs_H1$mean_DEC, paired = T, alternative = 'g')
+# wilcox.test(diffs_H1$mean_H1, diffs_H1$mean_DEC, paired = T, alternative = 'g')
+
+# 1 - 0.01976
+# [15] - 0.01878
+# 2 - 0.1711
+# 5 - 0.079
+# [125] - 0.0186
+# [1345] - 0.024
 
 z <- cbind.data.frame(cell = c(rep('H1',nrow(diffs_H1)),rep('endo',nrow(diffs_endo))),
                       diffs = c(diffs_H1$diff,diffs_endo$diff))
 
+ggplot(z, aes(y = log(diffs+1), x = cell)) +
+  geom_boxplot()
+
 ggplot(z, aes(diffs, fill = cell)) +
-  geom_histogram(binwidth = 50) +
-  xlim(c(-2000,2000)) + ylim(0,100)
+  geom_histogram(binwidth = 30) +
+  xlim(c(-500,500)) + ylim(0,370)
 
 
 
