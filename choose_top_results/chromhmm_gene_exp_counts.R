@@ -8,7 +8,11 @@ library(ggsignif)
 H1_chromhmm <- read_tsv("../chromHMM_epimap_calls/H1.bed", col_names = F)
 H1_chromhmm <- H1_chromhmm[,1:4]
 
+endo_chromhmm <- read_tsv("../chromHMM_epimap_calls/endoderm.bed", col_names = F)
+endo_chromhmm <- endo_chromhmm[,1:4]
+
 colnames(H1_chromhmm) <-  c('chr','pos1','pos2','label')
+colnames(endo_chromhmm) <-  c('chr','pos1','pos2','label')
 
 # RAW COUNT NORMALIZATION
 exp_data_raw <- read_csv("../expression/GSE75748_bulk_cell_type_ec.csv")
@@ -71,13 +75,6 @@ get_overlaps <- function(df, gene_exp) {
 }
 
 
-H1_genes <- get_overlaps(H1_chromhmm, normalized_counts)
-
-
-# h1 non labelled vs h1 label 5 expression
-t.test(diffs_H1$mean_H1, diffs_endo$mean_H1, paired = F, alternative = 'g')
-wilcox.test(diffs_H1$mean_H1, diffs_endo$mean_H1, paired =  F ,alternative = 'g')
-
 x <- unique(H1_chromhmm$label)
 
 datalist = list()
@@ -91,22 +88,39 @@ for (i in x) {
 all <- bind_rows(datalist)
 
 
-png("chromhmm_gene_exp_counts.png",width = 1300, height = 800, res = 200)
-ggplot(all, aes(y = log(diffs+1), x = cell)) +
+# png("chromhmm_gene_exp_H1.png",width = 1300, height = 800, res = 200)
+h1_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
   geom_boxplot() +
   labs(x = "Regions", y = "log(normalized counts)",
-       title = "Gene Expression (at base region) distribution by ChromHMM label") +
-  # geom_signif(
-  #   comparisons = list(c("label_1","no_label"),
-  #                      c("label_2","no_label"),
-  #                      c("label_3","no_label"),
-  #                      c("label_4","no_label"),
-  #                      c("label_5","no_label"),
-  #                      c("label_6","no_label")),
-  #   test = 'wilcox.test',
-  #   step_increase = c(.1),
-  #   map_signif_level = F) + 
-  theme_minimal()
+       title = "H1 Gene Expression (at base region) distribution by ChromHMM label") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+# dev.off()
+
+
+x <- unique(endo_chromhmm$label)
+
+datalist = list()
+
+for (i in x) {
+  genes <- get_overlaps(endo_chromhmm[grepl(i,endo_chromhmm$label),],normalized_counts)
+  z = data.frame(cell=c(rep(i,nrow(genes))),diffs=genes$mean_DEC)
+  datalist[[i]] <- z
+}
+
+all <- bind_rows(datalist)
+
+endo_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
+  geom_boxplot() +
+  labs(x = "Regions", y = "log(normalized counts)",
+       title = "Endo Gene Expression (at base region) distribution by ChromHMM label") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+library(egg)
+
+
+png("chromhmm_gene_exp.png",width = 1600, height = 1800, res = 200)
+grid.arrange(h1_plot,endo_plot,nrow = 2,
+             top = "ChromHMM gene expression")
 dev.off()
-
+ 
