@@ -20,20 +20,28 @@ x <- as.matrix(con_mat[,-1])
 rownames(x) <- con_mat$region
 matCSC <- as(x, "dgCMatrix")
 
+# Selecting Rank
+
+cv_predict <- crossValidate(matCSC, k = 1:20, method = "predict", reps = 3, seed = 123)
+cv_robust <- crossValidate(matCSC, k = 1:20, method = "robust", reps = 3, seed = 123)
+cv_impute <- crossValidate(matCSC, k = 1:20, method = "impute", reps = 3, seed = 123)
+
+png("rank_selection.png", width = 1500, height = 500, res = 200)
+plot_grid(
+  plot(cv_predict) + ggtitle("method = 'predict'") + theme(legend.position = "none"),
+  plot(cv_robust) + ggtitle("method = 'robust'") + theme(legend.position = "none"),
+  plot(cv_impute) + ggtitle("method = 'impute'") + scale_y_continuous(trans = "log10") + theme(legend.position = "none"),
+  get_legend(plot(cv_predict)), rel_widths = c(1, 1, 1, 0.4), nrow = 1, labels = "auto")
+dev.off()
+
+
+
 num_labels = 6
 num_runs = 100
 
 model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-20)
 
 # saveRDS(model,paste0("model_",num_labels,".rds"))
-# 
-# # ONLY LOCALLY, NON DEV VERSION OF RcppML
-# colnames(model$h) <- colnames(matCSC)
-# rownames(model$h) <- 1:num_labels
-# 
-# # # ONLY LOCALLY, NON DEV VERSION OF RcppML
-# colnames(model$w) <- 1:num_labels
-# rownames(model$w) <- rownames(matCSC)
 
 png(paste0("h_",num_labels,".png"),width = 1300, height = 1000, res = 200)
 pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
