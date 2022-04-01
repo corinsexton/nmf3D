@@ -26,14 +26,14 @@ num_runs = 100
 model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-20)
 
 # saveRDS(model,paste0("model_",num_labels,".rds"))
-
-# ONLY LOCALLY, NON DEV VERSION OF RcppML
-colnames(model$h) <- colnames(matCSC)
-rownames(model$h) <- 1:num_labels
-
+# 
 # # ONLY LOCALLY, NON DEV VERSION OF RcppML
-colnames(model$w) <- 1:num_labels
-rownames(model$w) <- rownames(matCSC)
+# colnames(model$h) <- colnames(matCSC)
+# rownames(model$h) <- 1:num_labels
+# 
+# # # ONLY LOCALLY, NON DEV VERSION OF RcppML
+# colnames(model$w) <- 1:num_labels
+# rownames(model$w) <- rownames(matCSC)
 
 png(paste0("h_",num_labels,".png"),width = 1300, height = 1000, res = 200)
 pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
@@ -70,7 +70,7 @@ all_labelled <- data.frame(type = con_mat$type,
                            chr = con_mat$chr,
                            pos1 = con_mat$pos1,
                            pos2 = con_mat$pos2,
-                           label = colnames(model$w)[apply(model$w,1,which.max)])
+                           label = colnames(model$w)[apply(model$w,1, function(x) which(x>0.8))])
 
 h1_labelled <- subset(all_labelled, type == 'h1')[,2:5]
 endo_labelled <- subset(all_labelled, type == 'endo')[,2:5]
