@@ -14,11 +14,12 @@ library(RcppML)
 library(tidyverse)
 library(pheatmap)
 
-con_mat <- read_tsv("../create_matrix/matrix_connections.tsv")
+con_mat <- read_tsv("../add_chromhmm_labs_postnmf/matrix_connections_add_chromhmm.tsv")
+
 
 x <- as.matrix(con_mat[,-1])
 rownames(x) <- con_mat$region
-matCSC <- as(x, "dgCMatrix")
+matCSC <- as(t(x), "dgCMatrix")
 
 # Selecting Rank
 
@@ -36,14 +37,14 @@ dev.off()
 
 
 
-num_labels = 6
+num_labels = 15
 num_runs = 100
 
 model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-20)
 
 # saveRDS(model,paste0("model_",num_labels,".rds"))
 
-png(paste0("h_",num_labels,".png"),width = 1300, height = 1000, res = 200)
+png(paste0("chromhmm_h_",num_labels,".png"),width = 1300, height = 1000, res = 200)
 pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
          cluster_cols = T, fontsize = 14,
          main = paste0("H matrix k=",num_labels),
@@ -51,6 +52,12 @@ pheatmap(t(model$h), scale = "row", border_color = NA, cluster_rows = F,
 # main = "Segmentation of H1 and naive hESCs",
 # breaks = seq(-1, 1, length.out = 100)
 dev.off()
+# 
+# model.pca <- prcomp(t(model$h))
+# 
+# 
+# ggplot(model.pca$x, aes(x = PC1, y = PC2)) +
+#   geom_point(size = 0.01)
 
 
 
@@ -61,10 +68,12 @@ colnames(z) <- "cell_type"
 
 # small <- model$w[c(1:50,20000:20050),]
 
-png(paste0("w_",num_labels,".png"),width = 1300, height = 1000, res = 200)
-pheatmap(model$w, scale = "row", border_color = NA, cluster_rows = T,
-         cluster_cols = F, fontsize = 14, annotation_row = z,show_rownames = F,
-         main = paste0("W matrix k=",num_labels))
+png(paste0("chromhmm_w_",num_labels,".png"),width = 1300, height = 1000, res = 200)
+pheatmap(model$w, scale = "row", border_color = NA, cluster_rows = F,
+         cluster_cols = F, fontsize = 14, show_rownames = T,
+         main = paste0("W matrix k=",num_labels),
+           breaks = seq(-1, 1, length.out = 100))
+
 dev.off()
 
 
