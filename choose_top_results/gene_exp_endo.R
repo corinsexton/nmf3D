@@ -101,12 +101,12 @@ base_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
   labs(x = "Regions", y = "log(normalized counts)",
        title = "Gene Expression (at base region) distribution by label") +
   geom_signif(
-    comparisons = list(c("1","no_label"),
-                       c("2","no_label"),
-                       c("3","no_label"),
-                       c("4","no_label"),
-                       c("5","no_label"),
-                       c("6","no_label")),
+    comparisons = list(c("nmf1","no_label"),
+                       c("nmf2","no_label"),
+                       c("nmf3","no_label"),
+                       c("nmf4","no_label"),
+                       c("nmf5","no_label"),
+                       c("nmf6","no_label")),
     test = 'wilcox.test',
     step_increase = c(.1),
     map_signif_level = F) + 
@@ -188,12 +188,12 @@ contact_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
   labs(x = "Regions", y = "log(normalized counts)",
        title = "Gene Expression (at contact region) distribution by label") +
   geom_signif(
-    comparisons = list(c("1","no_label"),
-                       c("2","no_label"),
-                       c("3","no_label"),
-                       c("4","no_label"),
-                       c("5","no_label"),
-                       c("6","no_label")),
+    comparisons = list(c("nmf1","no_label"),
+                       c("nmf2","no_label"),
+                       c("nmf3","no_label"),
+                       c("nmf4","no_label"),
+                       c("nmf5","no_label"),
+                       c("nmf6","no_label")),
     test = 'wilcox.test',
     step_increase = c(.1),
     map_signif_level = F) + 
