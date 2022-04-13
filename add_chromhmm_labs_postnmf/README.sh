@@ -7,3 +7,5 @@ bedtools intersect -a nmf_labelled.bed -b ../get_contact_labels/chromHMM_coordon
 
 cut -f4 chromHMM_merged_loops.bed | sort | uniq > nmf_labs.txt
 cut -f8 chromHMM_merged_loops.bed | sort | uniq > chromhmm_labs.txt
+
+./bed_to_matrix_add_chromhmm.py
