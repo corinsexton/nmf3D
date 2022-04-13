@@ -39,7 +39,7 @@ for line in bedfile:
 
 	ll = line.strip().split()
 
-	nmf_lab = ll[3]
+	nmf_lab = ll[3].strip('nmf')
 	base_lab = ll[7]
 
 	base_lab_index = classDict[base_lab]
