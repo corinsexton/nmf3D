@@ -1,5 +1,5 @@
 
-setwd("~/Documents/UNLV/Year4/nmf3D/choose_top_results/")
+setwd("~/Documents/UNLV/Year4/nmf3D/choose_top_results/chromhmm_added/")
 
 library(tidyverse)
 library(ggsignif)
@@ -19,7 +19,7 @@ colnames(H1_only) <- c("chr", "pos1", "pos2", "label")
 colnames(endo_only) <- c("chr", "pos1", "pos2", "label")
 
 # RAW COUNT NORMALIZATION
-exp_data_raw <- read_csv("../expression/GSE75748_bulk_cell_type_ec.csv")
+exp_data_raw <- read_csv("../../expression/GSE75748_bulk_cell_type_ec.csv")
 exp_data <- round(exp_data_raw[,c(2,3,4,5,9,10)])
 
 meta <- cbind.data.frame(cell_type = c(rep("H1",4),"DEC","DEC"))
@@ -116,7 +116,7 @@ base_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
 
 ##### GET CONTACT BOXPLOTS
 
-contact_bed <- read_tsv("../get_contact_labels/connections.tsv",col_names = c("chr","pos1","pos2","chr_merged","pos1_merged","pos2_merged","lab_merged"),
+contact_bed <- read_tsv("../../get_contact_labels/connections.tsv",col_names = c("chr","pos1","pos2","chr_merged","pos1_merged","pos2_merged","lab_merged"),
                         col_types = "cddcccc")
 
 sep_contact_bed <- contact_bed %>% separate_rows(chr_merged,pos1_merged,pos2_merged,sep = ',') %>% distinct()
@@ -158,11 +158,11 @@ y <- findOverlaps(H1_only_nmf3D_regions,H1_contact_regions)
 
 endo_matches <- cbind.data.frame(endo_contacts[attr(x,'to'),],endo_present[attr(x,'from'),])
 endo_matches <- endo_matches %>% select(contact_chr,contact_pos1,contact_pos2, label)
-colnames(endo_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label_orig")
+colnames(endo_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label")
 
 h1_matches <- cbind.data.frame(h1_contacts[attr(y,'to'),],H1_only[attr(y,'from'),])
 h1_matches <- h1_matches %>% select(contact_chr,contact_pos1,contact_pos2, label)
-colnames(h1_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label_orig")
+colnames(h1_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label")
 
 
 x <- unique(endo_matches$label)

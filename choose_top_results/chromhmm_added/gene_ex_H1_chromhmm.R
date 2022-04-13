@@ -1,5 +1,5 @@
 
-setwd("~/Documents/UNLV/Year4/nmf3D/choose_top_results/")
+setwd("~/Documents/UNLV/Year4/nmf3D/choose_top_results/chromhmm_added/")
 
 library(tidyverse)
 library(ggsignif)
@@ -19,7 +19,7 @@ colnames(H1_only) <- c("chr", "pos1", "pos2", "label")
 colnames(endo_only) <- c("chr", "pos1", "pos2", "label")
 
 # RAW COUNT NORMALIZATION
-exp_data_raw <- read_csv("../expression/GSE75748_bulk_cell_type_ec.csv")
+exp_data_raw <- read_csv("../../expression/GSE75748_bulk_cell_type_ec.csv")
 exp_data <- round(exp_data_raw[,c(2,3,4,5,9,10)])
 
 meta <- cbind.data.frame(cell_type = c(rep("H1",4),"DEC","DEC"))
@@ -59,8 +59,8 @@ get_overlaps <- function(df, gene_exp) {
   }
   
   reg <- GRanges(df$chr, 
-                 IRanges(as.numeric(df$pos1), 
-                         as.numeric(df$pos2)))
+                    IRanges(as.numeric(df$pos1), 
+                            as.numeric(df$pos2)))
   
   overlaps <- findOverlaps(reg, gc_db)
   
@@ -74,22 +74,22 @@ get_overlaps <- function(df, gene_exp) {
   diffs <- merged %>% select(mean_H1, mean_DEC) %>%
     mutate(diff =  mean_H1 - mean_DEC) %>% subset(!is.na(mean_H1)) %>% unique()
   
-  
+
   diffs
 }
 
-x <- unique(endo_present$label)
+x <- unique(H1_present$label)
 
 datalist = list()
 
 for (i in x) {
-  genes <- get_overlaps(endo_present[grepl(i,endo_present$label),],normalized_counts)
-  z = data.frame(cell=c(rep(i,nrow(genes))),diffs=genes$mean_DEC)
+  genes <- get_overlaps(H1_present[grepl(i,H1_present$label),],normalized_counts)
+  z = data.frame(cell=c(rep(i,nrow(genes))),diffs=genes$mean_H1)
   datalist[[i]] <- z
 }
 
-no_label <- get_overlaps(H1_only[grepl("[123456]",H1_only$label),],normalized_counts)
-z = data.frame(cell=c(rep('no_label',nrow(no_label))),diffs=no_label$mean_DEC)
+no_label <- get_overlaps(endo_only[grepl("[123456]",endo_only$label),],normalized_counts)
+z = data.frame(cell=c(rep('no_label',nrow(no_label))),diffs=no_label$mean_H1)
 
 datalist[["no_label"]] <- z
 
@@ -102,11 +102,11 @@ base_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
        title = "Gene Expression (at base region) distribution by label") +
   geom_signif(
     comparisons = list(c("nmf1","no_label"),
-                       c("nmf2","no_label"),
-                       c("nmf3","no_label"),
-                       c("nmf4","no_label"),
-                       c("nmf5","no_label"),
-                       c("nmf6","no_label")),
+                        c("nmf2","no_label"),
+                        c("nmf3","no_label"),
+                        c("nmf4","no_label"),
+                        c("nmf5","no_label"),
+                        c("nmf6","no_label")),
     test = 'wilcox.test',
     step_increase = c(.1),
     map_signif_level = F) + 
@@ -116,7 +116,7 @@ base_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
 
 ##### GET CONTACT BOXPLOTS
 
-contact_bed <- read_tsv("../get_contact_labels/connections.tsv",col_names = c("chr","pos1","pos2","chr_merged","pos1_merged","pos2_merged","lab_merged"),
+contact_bed <- read_tsv("../../get_contact_labels/connections.tsv",col_names = c("chr","pos1","pos2","chr_merged","pos1_merged","pos2_merged","lab_merged"),
                         col_types = "cddcccc")
 
 sep_contact_bed <- contact_bed %>% separate_rows(chr_merged,pos1_merged,pos2_merged,sep = ',') %>% distinct()
@@ -139,44 +139,44 @@ endo_contacts$chr <- gsub("_.*",'',endo_contacts$chr)
 
 
 
-endo_nmf3D_regions <- GRanges(endo_present$chr, IRanges(as.numeric(endo_present$pos1),
-                                                    as.numeric(endo_present$pos2)))
-endo_contact_regions <- GRanges(endo_contacts$chr, IRanges(as.numeric(endo_contacts$pos1),
-                                                       as.numeric(endo_contacts$pos2)))
-
-
-
-H1_only_nmf3D_regions <- GRanges(H1_only$chr, IRanges(as.numeric(H1_only$pos1),
-                                                          as.numeric(H1_only$pos2)))
+H1_nmf3D_regions <- GRanges(H1_present$chr, IRanges(as.numeric(H1_present$pos1),
+                                                 as.numeric(H1_present$pos2)))
 H1_contact_regions <- GRanges(h1_contacts$chr, IRanges(as.numeric(h1_contacts$pos1),
-                                                           as.numeric(h1_contacts$pos2)))
+                                                   as.numeric(h1_contacts$pos2)))
 
 
-x <- findOverlaps(endo_nmf3D_regions,endo_contact_regions)
-y <- findOverlaps(H1_only_nmf3D_regions,H1_contact_regions)
+
+endo_only_nmf3D_regions <- GRanges(endo_only$chr, IRanges(as.numeric(endo_only$pos1),
+                                                 as.numeric(endo_only$pos2)))
+endo_contact_regions <- GRanges(endo_contacts$chr, IRanges(as.numeric(endo_contacts$pos1),
+                                               as.numeric(endo_contacts$pos2)))
 
 
-endo_matches <- cbind.data.frame(endo_contacts[attr(x,'to'),],endo_present[attr(x,'from'),])
-endo_matches <- endo_matches %>% select(contact_chr,contact_pos1,contact_pos2, label)
-colnames(endo_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label_orig")
+x <- findOverlaps(H1_nmf3D_regions,H1_contact_regions)
+y <- findOverlaps(endo_only_nmf3D_regions,endo_contact_regions)
 
-h1_matches <- cbind.data.frame(h1_contacts[attr(y,'to'),],H1_only[attr(y,'from'),])
+
+h1_matches <- cbind.data.frame(h1_contacts[attr(x,'to'),],H1_present[attr(x,'from'),])
 h1_matches <- h1_matches %>% select(contact_chr,contact_pos1,contact_pos2, label)
 colnames(h1_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label_orig")
 
+endo_matches <- cbind.data.frame(endo_contacts[attr(y,'to'),],endo_only[attr(y,'from'),])
+endo_matches <- endo_matches %>% select(contact_chr,contact_pos1,contact_pos2, label)
+colnames(endo_matches) <- c("chr_orig", "pos1_orig","pos2_orig","label_orig")
 
-x <- unique(endo_matches$label)
+
+x <- unique(h1_matches$label)
 
 datalist = list()
 
 for (i in x) {
-  genes <- get_overlaps(endo_matches[grepl(i,endo_matches$label),],normalized_counts)
-  z = data.frame(cell=c(rep(i,nrow(genes))),diffs=genes$mean_DEC)
+  genes <- get_overlaps(h1_matches[grepl(i,h1_matches$label),],normalized_counts)
+  z = data.frame(cell=c(rep(i,nrow(genes))),diffs=genes$mean_H1)
   datalist[[i]] <- z
 }
 
-no_label <- get_overlaps(h1_matches[grepl("[123456]",h1_matches$label),],normalized_counts)
-z = data.frame(cell=c(rep("no_label",nrow(no_label))),diffs=no_label$mean_DEC)
+no_label <- get_overlaps(endo_matches[grepl("[123456]",endo_matches$label),],normalized_counts)
+z = data.frame(cell=c(rep("no_label",nrow(no_label))),diffs=no_label$mean_H1)
 
 datalist[["no_label"]] <- z
 
@@ -206,9 +206,9 @@ contact_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
 library(egg)
 
 
-png("gene_exp_endo.png",width = 1300, height = 1800, res = 200)
+png("gene_exp_H1.png",width = 1300, height = 1800, res = 200)
 grid.arrange(base_plot,contact_plot,nrow = 2,
-             top = "Endo gene expression by label and region")
+             top = "H1 gene expression by label and region")
 dev.off()
 
 
