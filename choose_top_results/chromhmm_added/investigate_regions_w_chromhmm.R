@@ -4,10 +4,11 @@ setwd("~/Documents/UNLV/Year4/nmf3D/choose_top_results/chromhmm_added/")
 library(tidyverse)
 
 
-total_int <- read_tsv("total_network.bed")
+total_int <- read_tsv("nmf3D_network_all.bed",col_names = F)
+colnames(total_int) <- c("chr_h1","pos1_h1","pos2_h1","nmf3D_h1","chr_endo", "pos1_endo", "pos2_endo","nmf3D_endo")
 
-table(total_int$nmf3D_H1,total_int$nmf3D_endo)
-table(total_int$chromHMM_H1,total_int$chromHMM_endo)
+
+table(total_int$nmf3D_h1,total_int$nmf3D_endo)
 
 z <- table(total_int$nmf3D_H1,total_int$nmf3D_endo,total_int$chromHMM_H1,total_int$chromHMM_endo)
 

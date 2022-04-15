@@ -110,6 +110,7 @@ base_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
     test = 'wilcox.test',
     step_increase = c(.1),
     map_signif_level = F) + 
+  scale_x_discrete(labels = c("nmf1_EnhWk/Quies","nmf2_Tx","nmf3_Biv","nmf4_TSS","nmf5_Enh","nmf6_Repr", "No Label")) +
   theme_minimal()
 
 # dev.off()
@@ -196,7 +197,8 @@ contact_plot <- ggplot(all, aes(y = log(diffs+1), x = cell)) +
                        c("nmf6","no_label")),
     test = 'wilcox.test',
     step_increase = c(.1),
-    map_signif_level = F) + 
+    map_signif_level = F) +
+  scale_x_discrete(labels = c("nmf1_EnhWk/Quies","nmf2_Tx","nmf3_Biv","nmf4_TSS","nmf5_Enh","nmf6_Repr", "No Label")) +
   theme_minimal()
 
 # dev.off()

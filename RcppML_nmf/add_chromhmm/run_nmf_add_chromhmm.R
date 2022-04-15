@@ -42,7 +42,7 @@ num_runs = 1000
 
 model <- nmf(matCSC, k = num_labels, maxit = num_runs, tol = 1e-20)
 
-# saveRDS(model,paste0("model_",num_labels,".rds"))
+# saveRDS(model,paste0("../with_chromhmm_model_",num_labels,".rds"))
 
 # small <- model$h[,c(1:3,10:30)]
 z <- as.data.frame(ifelse(grepl("endo",colnames(model$h)),"endo","h1"))
@@ -99,6 +99,12 @@ all_labelled <- data.frame(type = con_mat$type,
                            label = rownames(model$h)[apply(scaled_h,2, function(x) which.max(x))])
 
 all_labelled <- all_labelled[all_labelled$top_region > 0.75,]
+
+
+# H1 19/169 in HACER (39/169 all)
+# endo in HACER (38/169 all)
+nmf4_5_regions <- all_labelled[apply(scaled_h,2, function(x) x[["nmf4"]] > 0.3 & x[["nmf5"]] > 0.3),]
+write_tsv(nmf4_5_regions,"nmf4_nmf5_regions.tsv")
 
 h1_labelled <- subset(all_labelled, type == 'h1')[,c(2:4,6)]
 endo_labelled <- subset(all_labelled, type == 'endo')[,c(2:4,6)]

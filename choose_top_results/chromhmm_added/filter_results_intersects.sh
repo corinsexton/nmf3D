@@ -24,7 +24,7 @@ cat nmf3D_network_endo.bed | grep '\-1' - | awk '{print ".\t-1\t-1\t.\t"$1"\t"$2
 # nmf3D regions
 
 #echo -e "chr\tpos1\tpos2\tH1_nmf3D_lab\tEndo_nmf3D_lab" > nmf3D_network.tsv
-bedtools intersect -a ../../RcppML_nmf/h1_labelled_chromhmm.bed -b ../../RcppML_nmf/endo_labelled_chromhmm.bed -wa -wb -f .99 -F .99  | \
+bedtools intersect -a ../../RcppML_nmf/h1_labelled_chromhmm.bed -b ../../RcppML_nmf/endo_labelled_chromhmm.bed -wa -wb -f .50 -F .50  | \
 	awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4"\t"$8}' - > nmf3D_network.bed
 
 
