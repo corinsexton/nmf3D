@@ -46,5 +46,10 @@ bedtools intersect -a  nmf3D_network.bed -b chromHMM_network.bed -wa -wb -f .05 
 	#awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4"\t"$13}' - | sed 's/\//_/g' >> chromHMM_network.tsv
 
 
+#chr10	785000	790000	nmf4	.	-1	-1	.	0	chr10	785460	786060	ReprPC	0	.	785460	786060	128,128,128
+
+echo -e "chr\tpos1\tpos2\tnmf3D_H1\tchr_chromhmm\tpos1_chromhmm\tpos2_chromhmm\tchromHMM_H1" > total_network_H1.bed
+cut -f 1,2,3,4 nmf3D_network_h1.bed | bedtools intersect -a - -b ../chromHMM_epimap_calls/H1.bed -wa -wb -f .05 -F .99 | cut -f 1,2,3,4,5,6,7,8 >> total_network_H1.bed
+	#awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4"\t"$13}' - | sed 's/\//_/g' >> chromHMM_network.tsv
 
 
